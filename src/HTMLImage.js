@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { Image, View, Text } from 'react-native';
+import { Image, View, Text, ActivityIndicator, Dimensions } from 'react-native';
 import PropTypes from 'prop-types';
 
 export default class HTMLImage extends PureComponent {
@@ -7,7 +7,8 @@ export default class HTMLImage extends PureComponent {
         super(props);
         this.state = {
             width: props.imagesInitialDimensions.width,
-            height: props.imagesInitialDimensions.height
+            height: props.imagesInitialDimensions.height,
+            isLoaded: false,
         };
     }
 
@@ -42,6 +43,10 @@ export default class HTMLImage extends PureComponent {
 
     componentWillReceiveProps (nextProps) {
         this.getImageSize(nextProps);
+    }
+
+    onImageLoaded() {
+        this.setState({isLoaded: true});
     }
 
     getDimensionsFromStyle (style, height, width) {
@@ -103,12 +108,18 @@ export default class HTMLImage extends PureComponent {
     }
 
     validImage (source, style, props = {}) {
+        const { isLoaded, width, height } = this.state;
+        const marginLeft = Dimensions.get('window').width >= width ? 0 : -20;
         return (
-            <Image
-              source={source}
-              style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
-              {...props}
-            />
+            <View style={{flex: 1, alignItems: 'center'}}>
+                {!isLoaded && <View style={{ position: 'relative' }}><ActivityIndicator style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width, height, marginLeft: -20}} color="#000" /></View>}
+                <Image
+                  source={source}
+                  style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
+                  onLoad={(): void => this.onImageLoaded()}
+                  {...props}
+                />
+            </View>
         );
     }
 

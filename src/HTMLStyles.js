@@ -89,6 +89,12 @@ export function computeTextStyles (element, passProps) {
         });
     });
 
+    // HACK FOR ATLAS - overwrite base styles when bold if inline style is present
+    if (Object.values(passProps.baseFontStyle).includes('Lato_regular') && Object.values(finalStyle).includes('bold')) {
+        passProps.baseFontStyle = { ...passProps.baseFontStyle };
+        passProps.baseFontStyle.fontFamily = 'Lato_bold';
+    }
+
     // Finally, try to add the baseFontStyle values to add pontentially missing
     // styles to each text node
     return { ...passProps.baseFontStyle, ...finalStyle };
