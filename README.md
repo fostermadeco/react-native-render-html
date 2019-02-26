@@ -9,3 +9,4 @@ This hacked version includes:
     * An activity indicator for images.
     * Wrapper for images so images can be centered.
     * If bold styling is present inline, switches font to 'Lato_bold'.
+    * Fix for image blur issue.

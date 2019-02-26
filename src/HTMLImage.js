@@ -9,6 +9,7 @@ export default class HTMLImage extends PureComponent {
             width: props.imagesInitialDimensions.width,
             height: props.imagesInitialDimensions.height,
             isLoaded: false,
+            indeterminate: (!props.style || !props.style.width || !props.style.height),
         };
     }
 
@@ -87,7 +88,8 @@ export default class HTMLImage extends PureComponent {
         if (styleWidth && styleHeight) {
             return this.mounted && this.setState({
                 width: typeof styleWidth === 'string' && styleWidth.search('%') !== -1 ? styleWidth : parseInt(styleWidth, 10),
-                height: typeof styleHeight === 'string' && styleHeight.search('%') !== -1 ? styleHeight : parseInt(styleHeight, 10)
+                height: typeof styleHeight === 'string' && styleHeight.search('%') !== -1 ? styleHeight : parseInt(styleHeight, 10),
+                indeterminate: false,
             });
         }
         // Fetch image dimensions only if they aren't supplied or if with or height is missing
@@ -99,11 +101,17 @@ export default class HTMLImage extends PureComponent {
                 }
                 const optimalWidth = imagesMaxWidth <= originalWidth ? imagesMaxWidth : originalWidth;
                 const optimalHeight = (optimalWidth * originalHeight) / originalWidth;
-                this.mounted && this.setState({ width: optimalWidth, height: optimalHeight, error: false });
+                this.mounted && this.setState({ width: optimalWidth, height: optimalHeight, indeterminate: false, error: false });
             },
             () => {
                 this.mounted && this.setState({ error: true });
             }
+        );
+    }
+
+    get placeholderImage () {
+        return (
+            <View style={{width: this.props.imagesInitialDimensions.width, height: this.props.imagesInitialDimensions.height}} />
         );
     }
 
@@ -134,6 +142,12 @@ export default class HTMLImage extends PureComponent {
     render () {
         const { source, style, passProps } = this.props;
 
-        return !this.state.error ? this.validImage(source, style, passProps) : this.errorImage;
+        if (this.state.error) {
+            return this.errorImage;
+        }
+        if (this.state.indeterminate) {
+            return this.placeholderImage;
+        }
+        return this.validImage(source, style, passProps);
     }
 }
