@@ -10,4 +10,4 @@ This hacked version includes:
     * Wrapper for images so images can be centered.
     * If bold styling is present inline, switches font to 'Lato_bold'.
     * Fix for image blur issue.
-    * Smaller margin for uls
+    * Move margin to top for uls and smaller because it was causing weird whitespace issues
