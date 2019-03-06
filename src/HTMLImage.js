@@ -120,7 +120,7 @@ export default class HTMLImage extends PureComponent {
         const marginLeft = Dimensions.get('window').width >= width ? 0 : -20;
         return (
             <View style={{flex: 1, alignItems: 'center'}}>
-                {!isLoaded && <View style={{ position: 'relative' }}><ActivityIndicator style={{position: 'absolute', left: 0, right: 0, top: 0, bottom: 0, width, height, marginLeft: -20}} color="#000" /></View>}
+                {!isLoaded && <View style={{ position: 'relative', backgroundColor: '#f3f4f4'  }}><ActivityIndicator style={{ width, height, marginLeft }} color="#000" /></View>}
                 <Image
                   source={source}
                   style={[style, { width: this.state.width, height: this.state.height, resizeMode: 'cover' }]}
